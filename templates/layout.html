@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>首页</title>
+    <link rel="stylesheet" type="text/css" href="../static/css/bootstrap.min.css">
+    <style type="text/css">
+    	/*.navbar-nav{*/
+    		/*float: left;*/
+    		/*margin: 0;*/
+    	/*}*/
+    </style>
+</head>
+<body>
+	<nav class="navbar navbar-default navbar-static-top">
+		<div class="container">
+			<div id="navbar">
+				<ul class="nav navbar-nav">
+					<li class="view active" id="allclick">
+						<a href="javascript:0">全部</a>
+					</li>
+				</ul>
+				<ul class="nav navbar-nav">
+					<li class="view" id="attenclick">
+						<a href="javascript:0">关注</a>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		<div class="container" id="all" style>
+	    	<!-- <h3>11111</h3> -->
+			{% block all %}{% endblock %}
+		</div>
+		<div class="container" id="attention" style="display: none;">
+	    	<!-- <h3>22222</h3> -->
+			{% block attention %}{% endblock %}
+		</div>
+	</div>
+<script src="../static/js/jquery-3.2.1.min.js"></script>
+<script src="../static/js/bootstrap.min.js"></script>
+<script src="../static/js/common.js"></script>
+</body>
+</html>
