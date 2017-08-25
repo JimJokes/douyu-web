@@ -1,9 +1,25 @@
 {% extends "layout.html" %}
 
+{% block navbar %}
+{% include "navbar.html" %}
+{% endblock %}
+
 {% block all %}
 {% include "all.html" %}
 {% endblock %}
 
 {% block attention %}
+{% include "attention.html" %}
+{% endblock %}
 
+{% block setting %}
+{% include "setting.html" %}
+{% endblock %}
+
+{% block info %}
+{% include "info.html" %}
+{% endblock %}
+
+{% block modal %}
+{% include "modal.html" %}
 {% endblock %}

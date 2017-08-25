@@ -1,7 +1,6 @@
 # Created by .ignore support plugin (hsz.mobi)
-.gitignore
 .idea/
 __pycache__/
 douyu.db
 migrations/
-versions/
+test/

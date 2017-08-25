@@ -26,38 +26,40 @@ class Msg(db.Model):
     el = db.Column(db.String(256))
     date = db.Column(db.DateTime)
 
-    def __init__(self, cid, txt, rid, uid, nn, ic=None, level=None,
-                 ol=None, pg=None, sahf=None, rg=None, dlv=None,
-                 dc=None, bdlv=None, nl=None, bnn=None, bl=None,
-                 col=None, el=None):
-        self.cid = cid
-        self.txt = txt
-        self.rid = rid
-        self.uid = uid
-        self.nn = nn
-        self.ic = ic
-        self.level = level
-        self.ol = ol
-        self.pg = pg
-        self.sahf = sahf
-        self.rg = rg
-        self.dlv = dlv
-        self.dc = dc
-        self.bdlv = bdlv
-        self.nl = nl
-        self.bnn = bnn
-        self.bl = bl
-        self.col = col
-        self.el = el
-        self.date = datetime.utcnow()
+    def __init__(self, message):
+        self.cid = message.cid
+        self.txt = message.txt
+        self.rid = message.rid
+        self.uid = message.uid
+        self.nn = message.nn
+        self.ic = message.ic
+        self.level = message.level
+        self.ol = message.ol
+        self.pg = message.pg
+        self.sahf = message.sahf
+        self.rg = message.rg
+        self.dlv = message.dlv
+        self.dc = message.dc
+        self.bdlv = message.bdlv
+        self.nl = message.nl
+        self.bnn = message.bnn
+        self.bl = message.bl
+        self.col = message.col
+        el = []
+        for item in message.el:
+            el.append(item['eid'])
+        self.el = ','.join(el)
+        self.date = datetime.now()
 
     def __repr__(self):
         return '<Msg %s: %s>' % (self.nn, self.txt)
 
 
-class User(db.Model):
+class Follow(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
+    uid = db.Column(db.Integer)
+    name = db.Column(db.String(100), nullable=False)
 
-    def __init__(self, name):
+    def __init__(self, name, uid=None):
+        self.uid = uid
         self.name = name

@@ -8,3 +8,4 @@ with app.app_context():
     if not os.path.exists('./migrations'):
         init()
     migrate()
+    # upgrade()

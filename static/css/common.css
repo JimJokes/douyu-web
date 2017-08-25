@@ -1,0 +1,65 @@
+.chat-frame {
+	height: 100%;
+}
+.chat {
+	float: left;
+	position: relative;
+	padding-right: 15px;
+	padding-bottom: 20px;
+    width: 100%;
+}
+.navbar-my {
+    margin: 0;
+  }
+.navbar-my > li {
+	float: left;
+}
+.navbar-my > li > a {
+  padding-top: 15px;
+  padding-bottom: 15px;
+}
+.nav > li > select {
+	width: 150px;
+	float: left !important;
+	margin: 8px 15px 8px 0;
+}
+.badge {
+    background-color: red;
+}
+.info {
+    width: 320px;
+    float: right;
+    position: relative;
+    padding-left: 15px;
+}
+.list-group-item > h4, .list-group-item > p {
+    display: inline-block;
+}
+.cell > p {
+    margin: 5px;
+}
+.title > button {
+    float: right;
+    margin-top: 4px;
+}
+.cell > button {
+    float: right;
+}
+@media (min-width: 768px) {
+	.nav > li > select {
+		margin: 8px 15px 8px 15px;
+	}
+    .chat {
+        width: 400px;
+    }
+}
+@media (min-width: 992px) {
+    .chat {
+        width: 620px;
+    }
+}
+@media (min-width: 1200px) {
+    .chat {
+        width: 820px;
+    }
+}
