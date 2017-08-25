@@ -79,12 +79,14 @@ $(function(){
     $('.add').click(function () {
         var name = $('#name').val();
         if (name) {
-            
+            var a;
+        }else {
+            $('#name-error').text('昵称输入有误！').show()
         }
     });
     // 直播间信息获取
     function get_room_info () {
-        var $alert = $('.alert-danger');
+        var $alert = $('#info-error');
         var url = '/api/info/' + roomid;
         $.ajax({
             url:url,

@@ -45,6 +45,12 @@
 .cell > button {
     float: right;
 }
+#name-error {
+    padding: 10px;
+}
+.form-group > p {
+    margin-top: 10px;
+}
 @media (min-width: 768px) {
 	.nav > li > select {
 		margin: 8px 15px 8px 15px;
