@@ -51,6 +51,12 @@
 .form-group > p {
     margin-top: 10px;
 }
+.empty {
+    text-align: center;
+}
+thead>tr>th {
+    font-size: 20px;
+}
 @media (min-width: 768px) {
 	.nav > li > select {
 		margin: 8px 15px 8px 15px;

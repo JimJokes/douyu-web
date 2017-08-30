@@ -49,14 +49,11 @@ $(function(){
         if (!$(this).hasClass('active')) {
             $('.active').removeClass('active');
             $(this).addClass('active');
-            var cl = $(this).attr('data-id');
+            var cl = $(this).data('id');
             $(cl).show();
             $(cl).siblings().hide();
         }
     });
-    var roomid = $('.form-control').find('.selected').val();
-    var interval;
-
     // 切换直播间
     $('.navbar-btn').click(function () {
         var $select = $('.form-control'),
@@ -64,29 +61,91 @@ $(function(){
         if (!$id.hasClass('selected')) {
             $select.find('.selected').removeClass('selected');
             $id.addClass('selected');
-            roomid = $id.val();
             get_info();
         }
     });
-    // 动态加载模态框数据
-    $('#removeModal').on('show.bs.modal', function (event) {
-       var button = $(event.relatedTarget),
-           name = button.data('name'),
-           modal = $(this);
-       modal.find('.modal-body p span').text(name);
-    });
     // 添加关注
     $('.add').click(function () {
-        var name = $('#name').val();
+        var $name = $('#name'),
+        name = $name.val();
         if (name) {
-            var a;
+            $.ajax({
+                url: '/api/follow/add',
+                type: 'post',
+                data: {
+                    name: name
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.success) {
+                        if (result.data) {
+                            $('.empty').hide('fast');
+                            $('.follow-list').find('ul').append('<li class="list-group-item cell">\n' +
+                                '            <p data-id="' + result.data.id + '">' + result.data.name + '</p>\n' +
+                                '            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal">取消关注</button>\n' +
+                                '        </li>');
+                            $name.val('');
+                            $('#newModal').modal('hide');
+                        }
+                    }else {
+                        $('#name-error').text(result.message).show('fast');
+                    }
+                }
+            });
         }else {
-            $('#name-error').text('昵称输入有误！').show()
+            $('#name-error').text('请输入正确的昵称！').show('fast');
         }
+    });
+    var $newModal = $('#newModal'), $removeModal = $('#removeModal');
+    // 设置输入框焦点
+    $newModal.on('shown.bs.modal', function () {
+        $('#name').focus();
+    });
+    // 错误提示处理
+    $('#name').focus(function () {
+       $('#name-error').hide('fast');
+    });
+    $newModal.on('hidden.bs.modal', function () {
+        $('#name-error').hide('fast');
+    });
+    // 处理模态框信息
+    $removeModal.on('show.bs.modal', function (event) {
+        var $this = $(this),
+            $button = $(event.relatedTarget),
+            name = $button.prev('p').text(),
+            id = $button.prev('p').data('id');
+        $this.find('.modal-body p strong').text(name);
+        $('.remove').bind('click', function () {
+            $.ajax({
+                url: 'api/follow/remove',
+                type: 'delete',
+                data: {
+                    id: id
+                },
+                dataType: 'json',
+                success: function (result) {
+                    if (result.success) {
+                        $('#remove-error').hide('fast');
+                        $this.modal('hide');
+                        $button.parent('li').remove();
+                        if ($('.cell').length===0) {
+                            $('.empty').show('fast');
+                        }
+                    }else {
+                        $('#remove-error').text(result.message).show('fast');
+                    }
+                }
+            });
+        });
+    });
+    $removeModal.on('hidden.bs.modal', function () {
+        $('#remove-error').hide('fast');
+        $('.remove').unbind('click');
     });
     // 直播间信息获取
     function get_room_info () {
         var $alert = $('#info-error');
+        var roomid = $('.form-control').find('.selected').val();
         var url = '/api/info/' + roomid;
         $.ajax({
             url:url,
@@ -94,7 +153,7 @@ $(function(){
             success:function (result) {
                 result = JSON.parse(result);
                 if (result.error === 0) {
-                    $alert.hide();
+                    $alert.hide('fast');
                     var data = result.data, room_status = data.room_status;
                     var now = new Date(), time = parseInt((now - new Date(data.start_time)) / (60 * 1000));
                     $('#room_thumb').attr('src', data.room_thumb).attr('title', data.room_name);
@@ -111,23 +170,22 @@ $(function(){
                     $('#fans_num').text(data.fans_num);
                     $('#owner_weight').text(data.owner_weight);
                     $('#update_time').text(dateConvert(now.getTime()));
-                }else if (result.error === 101) {
-                    $alert.show();
-                    $alert.text(result.data)
+                }else {
+                    $alert.text(result.data).show('fast');
                 }
             },
             error: function () {
-                $alert.show();
-                $alert.text('弹幕服务器无响应，可能已退出')
+                $alert.text('弹幕姬无响应，可能已退出').show('fast');
             }
         });
     }
-    // function get_info() {
-    //     clearInterval(interval);
-    //     get_room_info();
-    //     interval = setInterval(function () {
-    //         get_room_info();
-    //     }, 10*1000);
-    // }
-    // get_info()
+    var interval;
+    function get_info() {
+        clearInterval(interval);
+        get_room_info();
+        // interval = setInterval(function () {
+        //     get_room_info();
+        // }, 10*1000);
+    }
+    get_info()
 });

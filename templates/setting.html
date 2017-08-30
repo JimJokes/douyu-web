@@ -4,12 +4,29 @@
             <h4>关注列表：</h4>
             <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newModal">添加关注</button>
         </li>
+        {% if follows %}
+        {% for follow in follows %}
         <li class="list-group-item cell">
-            <p>小缘</p>
-            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal" data-name="小缘">取消关注</button>
+            <p data-id="{{ follow.id }}">{{ follow.name }}</p>
+            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal">取消关注</button>
         </li>
+        {% endfor %}
+        <li class="list-group-item empty" style="display: none">
+            <p>还没有关注哦</p>
+        </li>
+        {% else %}
+        <li class="list-group-item empty">
+            <p>还没有关注哦</p>
+        </li>
+        {% endif %}
     </ul>
 </div>
 <div class="col-md-6">
-    <h1>1111111</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>设置：</th>
+            </tr>
+        </thead>
+    </table>
 </div>
