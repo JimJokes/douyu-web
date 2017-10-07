@@ -51,7 +51,7 @@
 .form-group > p {
     margin-top: 10px;
 }
-.empty {
+.follow-empty, .room-empty {
     text-align: center;
 }
 thead>tr>th {

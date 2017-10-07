@@ -1,27 +1,52 @@
-<div class="col-md-6 follow-list">
-    <ul class="list-group">
-        <li class="list-group-item title">
-            <h4>关注列表：</h4>
-            <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newModal">添加关注</button>
-        </li>
-        {% if follows %}
-        {% for follow in follows %}
-        <li class="list-group-item cell">
-            <p data-id="{{ follow.id }}">{{ follow.name }}</p>
-            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal">取消关注</button>
-        </li>
-        {% endfor %}
-        <li class="list-group-item empty" style="display: none">
-            <p>还没有关注哦</p>
-        </li>
-        {% else %}
-        <li class="list-group-item empty">
-            <p>还没有关注哦</p>
-        </li>
-        {% endif %}
-    </ul>
+<div class="row">
+    <div class="col-md-6">
+        <ul class="list-group follow-list">
+            <li class="list-group-item title">
+                <h4>关注列表：</h4>
+                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newModal">添加关注</button>
+            </li>
+            {% if follows %}
+            {% for follow in follows %}
+            <li class="list-group-item cell">
+                <p data-id="{{ follow.id }}">{{ follow.name }}</p>
+                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal">取消关注</button>
+            </li>
+            {% endfor %}
+            <li class="list-group-item follow-empty" style="display: none">
+                <p>还没有关注哦</p>
+            </li>
+            {% else %}
+            <li class="list-group-item follow-empty">
+                <p>还没有关注哦</p>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <ul class="list-group room-list">
+            <li class="list-group-item title">
+                <h4>关注直播间：</h4>
+                <button type="button" class="btn btn-sm btn-success" data-toggle="modal" data-target="#newModal" data-type="1">添加直播间</button>
+            </li>
+            {% if rooms %}
+            {% for room in rooms %}
+            <li class="list-group-item cell">
+                <P data-id="{{ room.id }}">{{ room.roomId }}</P>
+                <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal" data-type="1">删除直播间</button>
+            </li>
+            {% endfor %}
+            <li class="list-group-item room-empty" style="display: none">
+                <p>还没有关注哦</p>
+            </li>
+            {% else %}
+            <li class="list-group-item room-empty">
+                <p>还没有关注哦</p>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
 </div>
-<div class="col-md-6">
+<div>
     <table class="table">
         <thead>
             <tr>

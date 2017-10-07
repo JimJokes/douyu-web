@@ -20,4 +20,14 @@ with app.app_context():
 
         upgrade()
 
-app.run(debug=app.config.get('DEBUG', False))
+# websocket_server = WebSocketServer()
+# websocket_server.setDaemon(True)
+# websocket_server.start()
+#
+# app.run(debug=app.config.get('DEBUG', False))
+app.debug = app.config.get('DEBUG', False)
+
+from gevent import pywsgi
+from geventwebsocket.handler import WebSocketHandler
+sever = pywsgi.WSGIServer(('', 5000), app, handler_class=WebSocketHandler)
+sever.serve_forever()

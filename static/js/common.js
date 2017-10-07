@@ -64,39 +64,80 @@ $(function(){
             get_info();
         }
     });
-    // 添加关注
-    $('.add').click(function () {
-        var $name = $('#name'),
-        name = $name.val();
-        if (name) {
-            $.ajax({
-                url: '/api/follow/add',
-                type: 'post',
-                data: {
-                    name: name
-                },
-                dataType: 'json',
-                success: function (result) {
-                    if (result.success) {
-                        if (result.data) {
-                            $('.empty').hide('fast');
-                            $('.follow-list').find('ul').append('<li class="list-group-item cell">\n' +
-                                '            <p data-id="' + result.data.id + '">' + result.data.name + '</p>\n' +
-                                '            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal">取消关注</button>\n' +
-                                '        </li>');
-                            $name.val('');
-                            $('#newModal').modal('hide');
+    // 添加关注、直播间
+    var $newModal = $('#newModal'), $removeModal = $('#removeModal'), reg=/^\+?[1-9][0-9]*$/;
+    $newModal.on('show.bs.modal', function (event) {
+        var $this = $(this), $button = $(event.relatedTarget), title = $button.text(), type = $button.data('type');
+        $('#newModalLabel').text(title);
+        if (type===1) {
+            $('.control-label').text('输入直播间ID：');
+            $('.add').bind('click', function () {
+                var $name = $('#name'),
+                    name = $name.val();
+                if (reg.test(name)) {
+                    $.ajax({
+                        url: '/api/room/add',
+                        type: 'post',
+                        data: {
+                            name: name
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.success) {
+                                if (result.data) {
+                                    $('.room-empty').hide('fast');
+                                    $('.room-list').append('<li class="list-group-item cell">\n' +
+                                        '            <p data-id="' + result.data.id + '">' + result.data.roomId + '</p>\n' +
+                                        '            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal" data-type="1">删除直播间</button>\n' +
+                                        '        </li>');
+                                    $name.val('');
+                                    $this.modal('hide');
+                                }
+                            }else {
+                                $('#name-error').text(result.message).show('fast');
+                            }
                         }
-                    }else {
-                        $('#name-error').text(result.message).show('fast');
-                    }
+                    });
+                }else {
+                    $('#name-error').text('请输入正确的直播间ID！').show('fast');
                 }
-            });
+            })
         }else {
-            $('#name-error').text('请输入正确的昵称！').show('fast');
+            $('.control-label').text('输入昵称：');
+            $('.add').bind('click', function () {
+                var $name = $('#name'),
+                    name = $name.val();
+                if (name) {
+                    $.ajax({
+                        url: '/api/follow/add',
+                        type: 'post',
+                        data: {
+                            name: name
+                        },
+                        dataType: 'json',
+                        success: function (result) {
+                            if (result.success) {
+                                if (result.data) {
+                                    $('.follow-empty').hide('fast');
+                                    $('.follow-list').append('<li class="list-group-item cell">\n' +
+                                        '            <p data-id="' + result.data.id + '">' + result.data.name + '</p>\n' +
+                                        '            <button type="button" class="btn btn-sm btn-danger" data-toggle="modal" data-target="#removeModal">取消关注</button>\n' +
+                                        '        </li>');
+                                    $name.val('');
+                                    $this.modal('hide');
+                                }
+                            }else {
+                                $('#name-error').text(result.message).show('fast');
+                            }
+                        }
+                    });
+                }else {
+                    $('#name-error').text('请输入正确的昵称！').show('fast');
+                }
+            })
         }
+
     });
-    var $newModal = $('#newModal'), $removeModal = $('#removeModal');
     // 设置输入框焦点
     $newModal.on('shown.bs.modal', function () {
         $('#name').focus();
@@ -107,36 +148,65 @@ $(function(){
     });
     $newModal.on('hidden.bs.modal', function () {
         $('#name-error').hide('fast');
+        $('.add').unbind('click');
     });
-    // 处理模态框信息
+    // 取消关注、直播间
     $removeModal.on('show.bs.modal', function (event) {
         var $this = $(this),
             $button = $(event.relatedTarget),
             name = $button.prev('p').text(),
-            id = $button.prev('p').data('id');
-        $this.find('.modal-body p strong').text(name);
-        $('.remove').bind('click', function () {
-            $.ajax({
-                url: 'api/follow/remove',
-                type: 'delete',
-                data: {
-                    id: id
-                },
-                dataType: 'json',
-                success: function (result) {
-                    if (result.success) {
-                        $('#remove-error').hide('fast');
-                        $this.modal('hide');
-                        $button.parent('li').remove();
-                        if ($('.cell').length===0) {
-                            $('.empty').show('fast');
+            id = $button.prev('p').data('id'),
+            type = $button.data('type');
+        if (type===1) {
+            $('.para').html('确定删除直播间：<strong></strong> ?');
+            $('.remove').bind('click', function () {
+                $.ajax({
+                    url: 'api/room/remove',
+                    type: 'delete',
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.success) {
+                            $('#remove-error').hide('fast');
+                            $this.modal('hide');
+                            $button.parent('li').remove();
+                            if ($('.room-list').find('.cell').length===0) {
+                                $('.room-empty').show('fast');
+                            }
+                        }else {
+                            $('#remove-error').text(result.message).show('fast');
                         }
-                    }else {
-                        $('#remove-error').text(result.message).show('fast');
                     }
-                }
+                });
             });
-        });
+        } else {
+            $('.para').html('确定取消关注：<strong></strong> ?');
+            $('.remove').bind('click', function () {
+                $.ajax({
+                    url: 'api/follow/remove',
+                    type: 'delete',
+                    data: {
+                        id: id
+                    },
+                    dataType: 'json',
+                    success: function (result) {
+                        if (result.success) {
+                            $('#remove-error').hide('fast');
+                            $this.modal('hide');
+                            $button.parent('li').remove();
+                            if ($('.follow-list').find('.cell').length===0) {
+                                $('.follow-empty').show('fast');
+                            }
+                        }else {
+                            $('#remove-error').text(result.message).show('fast');
+                        }
+                    }
+                });
+            });
+        }
+        $this.find('.modal-body p strong').text(name);
     });
     $removeModal.on('hidden.bs.modal', function () {
         $('#remove-error').hide('fast');
@@ -187,5 +257,24 @@ $(function(){
         //     get_room_info();
         // }, 10*1000);
     }
-    get_info()
+    get_info();
+
+    if ('WebSocket' in window) {
+        var ws = new WebSocket('ws://localhost:5000/message');
+
+        ws.onopen = function () {
+            ws.send(JSON.stringify({msg_type: 0}));
+        };
+
+        ws.onmessage = function (event) {
+            var result = JSON.parse(event.data);
+                console.log(result.data)
+        };
+
+        ws.onclose = function () {
+            console.log('连接已关闭……')
+        }
+    }else {
+        alert('浏览器不支持websocket，请更换浏览器')
+    }
 });

@@ -66,5 +66,20 @@ class Follow(db.Model):
         return '<Follow %s>' % self.name
 
     @property
-    def serializable(self):
+    def serialize(self):
         return dict(id=self.id, name=self.name)
+
+
+class Room(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    roomId = db.Column(db.Integer, nullable=False, unique=True)
+
+    def __init__(self, roomId):
+        self.roomId = roomId
+
+    def __repr__(self):
+        return '<Room %s>' % self.roomId
+
+    @property
+    def serialize(self):
+        return dict(id=self.id, roomId=self.roomId)
